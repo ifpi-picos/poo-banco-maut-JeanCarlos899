@@ -3,6 +3,7 @@ package model;
 import java.util.UUID;
 
 public class Account {
+    private UUID accountUid;
     private UUID userUid;
     private String agency;
     private String number;
@@ -10,11 +11,12 @@ public class Account {
 
     private static int nextAccountNumber = 1;
 
-    public Account(UUID userUid, String agency, String number, double balance) {
+    public Account(UUID userUid, String agency) {
+        this.accountUid = UUID.randomUUID();
         this.userUid = userUid;
         this.agency = agency;
         this.number = generateAccountNumber();
-        this.balance = balance;
+        this.balance = 0;
     }
     
     private String generateAccountNumber() {
@@ -22,6 +24,19 @@ public class Account {
         nextAccountNumber++;
 
         return accountNumber;
+    }
+
+    public void deposit(double value) {
+        this.balance += value;
+    }
+
+    public boolean withdraw(double value) {
+        if (value > this.balance) {
+            return false;
+        }
+        this.balance -= value;
+
+        return true;
     }
     
     public String getAgency() {
