@@ -11,6 +11,7 @@ public class Transaction {
     public Transaction(UUID accountUid, double value) {
         this.accountUid = accountUid;
         this.value = value;
+        this.date = new Date();
     }
 
     public boolean transfer(Account account, double value) {
@@ -20,7 +21,6 @@ public class Transaction {
             return true;
         }
         this.type = "Transferência";
-        this.date = new Date();
 
         return false;
     }
@@ -32,7 +32,6 @@ public class Transaction {
             return true;
         }
         this.type = "Depósito";
-        this.date = new Date();
 
         return false;
     }
@@ -44,7 +43,6 @@ public class Transaction {
             return true;
         }
         this.type = "Saque";
-        this.date = new Date();
 
         return false;
     }

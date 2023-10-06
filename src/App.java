@@ -115,15 +115,22 @@ public class App {
                     System.exit(0);
                     break;
                   case 1:
-                    Transaction transaction = IOComponent.deposit(scanner, accountAccess);
+                    Transaction transaction = IOComponent.deposit(
+                        scanner,
+                        accountAccess);
                     transactions.add(transaction);
                     break;
                   case 2:
-                    Transaction transactionWithdraw = IOComponent.withdraw(scanner, accountAccess);
+                    Transaction transactionWithdraw = IOComponent.withdraw(
+                        scanner,
+                        accountAccess);
                     transactions.add(transactionWithdraw);
                     break;
                   case 3:
-                    IOComponent.transfer(scanner, accountAccess, accounts);
+                    IOComponent.transfer(
+                        scanner,
+                        accountAccess,
+                        accounts);
                     break;
                   case 4:
                     IOComponent.extract(accountAccess, transactions);
