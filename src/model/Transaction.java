@@ -1,5 +1,6 @@
 package model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Transaction {
@@ -17,11 +18,10 @@ public class Transaction {
         if (this.userAccount.getBalance() >= value) {
             this.userAccount.withdraw(value);
             destinationAccount.deposit(value);
+            this.type = "Transferência";
             this.value = value;
             return true;
         }
-        this.type = "Transferência";
-
         return false;
     }
 
@@ -29,10 +29,9 @@ public class Transaction {
         if (value > 0) {
             account.deposit(value);
             this.value = value;
+            this.type = "Depósito";
             return true;
         }
-        this.type = "Depósito";
-
         return false;
     }
 
@@ -40,15 +39,17 @@ public class Transaction {
         if (account.getBalance() >= value) {
             account.withdraw(value);
             this.value = value;
+            this.type = "Saque";
             return true;
         }
-        this.type = "Saque";
 
         return false;
     }
 
     @Override
     public String toString() {
-        return "Transação [data=" + date.toString() + ", tipo=" + type + ", valor=" + value + "]";
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+        return "* %s feito em %s no valor de R$ %.2f".formatted(this.type, dateFormat.format(this.date), this.value);
     }
 }

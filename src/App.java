@@ -25,7 +25,7 @@ public class App {
     accounts.add(
         new Account("01", new User("Jean", "12345678910", new Date(), new Address("Rua 1", "1", "Teresina", "PI"))));
     accounts.add(new Account("01",
-        new User("João", "12345678911", new Date(), new Address("Rua 2", "2", "Teresina", "PI"))));
+        new User("Karielly", "12345678911", new Date(), new Address("Rua 2", "2", "Teresina", "PI"))));
 
     // Menu principal
     while (currentAccount == null) {
@@ -54,7 +54,7 @@ public class App {
 
       switch (option) {
         case 0:
-          exit();
+          currentAccount = null;
           break;
         case 1:
           displayAccountInfo();
@@ -190,6 +190,10 @@ public class App {
         break;
       }
     }
+    if (currentAccount == null) {
+      System.out.println("Conta não encontrada");
+      pause();
+    }
   }
 
   private static void displayAccountInfo() {
@@ -220,15 +224,11 @@ public class App {
     System.out.println("Digite o valor a ser depositado: ");
     double value = scanner.nextDouble();
 
-    if (currentAccount.deposit(value)) {
-      System.out.println("Depósito realizado com sucesso!");
-      Transaction transaction = new Transaction(currentAccount);
-      transaction.deposit(currentAccount, value);
-      transactions.add(transaction);
-    } else {
-      System.out.println("Valor inválido");
-    }
+    Transaction transaction = new Transaction(currentAccount);
+    transaction.deposit(currentAccount, value);
 
+    System.out.println("Depósito realizado com sucesso!");
+    transactions.add(transaction);
     pause();
   }
 
