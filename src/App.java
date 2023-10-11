@@ -22,64 +22,67 @@ public class App {
   private static Account currentAccount = null;
 
   public static void main(String[] args) {
+
     accounts.add(
         new Account("01", new User("Jean", "12345678910", new Date(), new Address("Rua 1", "1", "Teresina", "PI"))));
     accounts.add(new Account("01",
         new User("Karielly", "12345678911", new Date(), new Address("Rua 2", "2", "Teresina", "PI"))));
 
-    // Menu principal
-    while (currentAccount == null) {
-      showWelcomeMenu();
-      int option = scanner.nextInt();
-
-      switch (option) {
-        case 0:
-          exit();
-          break;
-        case 1:
-          createAccount();
-          break;
-        case 2:
-          accessAccount();
-          break;
-        default:
-          System.out.println("Opção inválida");
+    while (true) {
+      while (currentAccount == null) {
+        showWelcomeMenu();
+        int option = scanner.nextInt();
+  
+        switch (option) {
+          case 0:
+            exit();
+            break;
+          case 1:
+            createAccount();
+            break;
+          case 2:
+            accessAccount();
+            break;
+          default:
+            System.out.println("Opção inválida");
+        }
       }
-    }
-
-    // Menu do usuário
-    while (currentAccount != null) {
-      showUserMenu();
-      int option = scanner.nextInt();
-
-      switch (option) {
-        case 0:
-          currentAccount = null;
-          break;
-        case 1:
-          displayAccountInfo();
-          break;
-        case 2:
-          displayUserInfo();
-          break;
-        case 3:
-          displayBalance();
-          break;
-        case 4:
-          deposit();
-          break;
-        case 5:
-          withdraw();
-          break;
-        case 6:
-          transfer();
-          break;
-        case 7:
-          displayTransactionHistory();
-          break;
-        default:
-          System.out.println("Opção inválida");
+  
+      // Menu do usuário
+      while (currentAccount != null) {
+        showUserMenu();
+        int option = scanner.nextInt();
+  
+        switch (option) {
+          case 0:
+            currentAccount = null;
+            break;
+          case 1:
+            displayAccountInfo();
+            break;
+          case 2:
+            displayUserInfo();
+            break;
+          case 3:
+            displayBalance();
+            break;
+          case 4:
+            deposit();
+            break;
+          case 5:
+            withdraw();
+            break;
+          case 6:
+            transfer();
+            break;
+          case 7:
+            displayTransactionHistory();
+            break;
+          default:
+            System.out.println("Opção inválida");
+        }
       }
+      
     }
   }
 
@@ -273,11 +276,17 @@ public class App {
       double value = scanner.nextDouble();
 
       Transaction transaction = new Transaction(currentAccount);
+      Transaction userDestinationTransaction = new Transaction(destinationAccount);
+      
       if (transaction.transfer(destinationAccount, value)) {
         System.out.println("Transferência realizada com sucesso!");
         transactions.add(transaction);
       } else {
         System.out.println("Valor inválido");
+      }
+
+      if (userDestinationTransaction.deposit(destinationAccount, value)) {
+        transactions.add(userDestinationTransaction);
       }
     }
 
@@ -288,7 +297,9 @@ public class App {
     clearScreen();
     System.out.println("Extrato: ");
     for (Transaction transaction : transactions) {
-      System.out.println(transaction);
+      if (transaction.getUserAccount().equals(currentAccount)) {
+        System.out.println(transaction);
+      }
     }
 
     pause();

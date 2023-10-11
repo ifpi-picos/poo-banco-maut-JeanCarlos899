@@ -46,9 +46,13 @@ public class Transaction {
         return false;
     }
 
+    public Account getUserAccount() {
+        return userAccount;
+    }
+
     @Override
     public String toString() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
         return "* %s feito em %s no valor de R$ %.2f".formatted(this.type, dateFormat.format(this.date), this.value);
     }
