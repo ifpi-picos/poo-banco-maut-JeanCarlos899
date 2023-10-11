@@ -1,39 +1,27 @@
 package model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.UUID;
 
 public class User {
-    private UUID uid;
     private String name;
-    private String cpf;
+    private final String cpf;
     private Date birthDate;
     private Address address;
-    private String password;
 
-    public User(String name, String cpf, Date birthDate, Address address, String password) {
-        this.uid = UUID.randomUUID();
+    public User(String name, String cpf, Date birthDate, Address address) {
         this.name = name;
         this.cpf = cpf;
         this.birthDate = birthDate;
         this.address = address;
-        this.password = password;
     }
 
-    public UUID getUid() {
-        return uid;
-    }
-    
     public String getName() {
         return name;
     }
 
     public String getCpf() {
         return cpf;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public Date getBirthDate() {
@@ -47,4 +35,25 @@ public class User {
     public void setName(String name) {
         this.name = name;
     }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    @Override
+    public String toString() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String formattedBirthDate = dateFormat.format(birthDate);
+
+        return String.format("""
+                Nome: %s
+                CPF: %s
+                Data de nascimento: %s
+                """, name, cpf, formattedBirthDate);
+    }
+
 }

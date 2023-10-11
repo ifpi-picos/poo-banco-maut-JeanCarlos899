@@ -1,22 +1,22 @@
 package model;
+
 import java.util.Date;
-import java.util.UUID;
 
 public class Transaction {
-    private UUID accountUid;
     private Date date;
     private String type;
     private double value;
+    private Account userAccount;
 
-    public Transaction(UUID accountUid, double value) {
-        this.accountUid = accountUid;
-        this.value = value;
+    public Transaction(Account account) {
+        this.userAccount = account;
         this.date = new Date();
     }
 
-    public boolean transfer(Account account, double value) {
-        if (account.getBalance() >= value) {
-            account.withdraw(value);
+    public boolean transfer(Account destinationAccount, double value) {
+        if (this.userAccount.getBalance() >= value) {
+            this.userAccount.withdraw(value);
+            destinationAccount.deposit(value);
             this.value = value;
             return true;
         }
@@ -47,19 +47,8 @@ public class Transaction {
         return false;
     }
 
-    public UUID getAccountUid() {
-        return accountUid;
-    }
-
-    public String getDate() {
-        return date.toString();
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public double getValue() {
-        return value;
+    @Override
+    public String toString() {
+        return "Transação [data=" + date.toString() + ", tipo=" + type + ", valor=" + value + "]";
     }
 }

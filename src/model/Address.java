@@ -5,14 +5,12 @@ public class Address {
     private String number;
     private String city;
     private String state;
-    private String complement;
 
-    public Address(String street, String number, String city, String state, String complement) {
+    public Address(String street, String number, String city, String state) {
         this.street = street;
         this.number = number;
         this.city = city;
         this.state = state;
-        this.complement = complement;
     }
 
     public String getStreet() {
@@ -31,10 +29,6 @@ public class Address {
         return state;
     }
 
-    public String getComplement() {
-        return complement;
-    }
-
     public void setStreet(String street) {
         this.street = street;
     }
@@ -43,15 +37,16 @@ public class Address {
         this.city = city;
     }
 
-    public void setComplement(String complement) {
-        this.complement = complement;
-    }
-
     public void setNumber(String number) {
         this.number = number;
     }
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    @Override
+    public String toString() {
+        return "Endereço [rua=" + street + "\n, número=" + number + "\n, cidade=" + city + "\n, estado=" + state + "]";
     }
 }

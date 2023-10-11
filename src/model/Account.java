@@ -1,24 +1,20 @@
 package model;
 
-import java.util.UUID;
-
 public class Account {
-    private UUID accountUid;
-    private UUID userUid;
-    private String agency;
-    private String number;
+    private final String agency;
+    private final String number;
+    private final User user;
     private double balance;
 
     private static int nextAccountNumber = 1;
 
-    public Account(UUID userUid, String agency) {
-        this.accountUid = UUID.randomUUID();
-        this.userUid = userUid;
+    public Account(String agency, User user) {
         this.agency = agency;
+        this.user = user;
         this.number = generateAccountNumber();
         this.balance = 0;
     }
-    
+
     private String generateAccountNumber() {
         String accountNumber = String.format("%04d", nextAccountNumber);
         nextAccountNumber++;
@@ -26,8 +22,16 @@ public class Account {
         return accountNumber;
     }
 
-    public void deposit(double value) {
-        this.balance += value;
+    public User getUser() {
+        return user;
+    }
+
+    public Boolean deposit(double value) {
+        if (value > 0) {
+            this.balance += value;
+            return true;
+        }
+        return false;
     }
 
     public boolean withdraw(double value) {
@@ -38,7 +42,7 @@ public class Account {
 
         return true;
     }
-    
+
     public String getAgency() {
         return agency;
     }
@@ -51,7 +55,12 @@ public class Account {
         return balance;
     }
 
-    public UUID getUid() {
-        return userUid;
+    @Override
+    public String toString() {
+        return """
+                Agência = %s
+                Número  = %s
+                Usuário = %s
+                Saldo   = %s""".formatted(agency, number, user.getName(), balance);
     }
 }
