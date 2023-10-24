@@ -26,10 +26,10 @@ public class SavingsAccount extends Account {
     @Override
     public void transfer(Account destinationAccount, double value) {
         if (value > 0 && value <= super.balance) {
-            // taxa de 10% por transferência
-            double transferValue = value * 1.1;
-            withdraw(transferValue);
-            destinationAccount.deposit(value);
+        // taxa de 10% por transferência
+        double transferValue = value * 1.1;
+        withdraw(transferValue);
+        destinationAccount.deposit(value);
         }
     }
 }
