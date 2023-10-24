@@ -65,4 +65,15 @@ public class CurrentAccount extends Account {
     public double getOverdraft() {
         return overdraft;
     }
+
+    @Override
+    public String toString() {
+        return """
+                Tipo: Conta Corrente
+                Agência: %s
+                Número da conta: %s
+                Saldo: %.2f
+                Cheque especial: %.2f
+                """.formatted(super.agency, super.accountNumber, super.balance, overdraft);
+    }
 }
