@@ -1,16 +1,16 @@
 package br.edu.ifpi.poo.entities;
 
 public abstract class Account {
-    final private String agency;
-    final private String accountNumber;
-    private Client client;
+    protected final String agency;
+    protected final String accountNumber;
     protected double balance = 0;
+    private Client client;
 
-    private static int numberOfAccounts = 1; 
+    private static int numberOfAccounts = 1;
 
     public Account(String agency) {
         this.agency = agency;
-        this.accountNumber = generateAccountNumber(); 
+        this.accountNumber = generateAccountNumber();
     }
 
     private String generateAccountNumber() {
