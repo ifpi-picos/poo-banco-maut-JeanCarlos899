@@ -1,27 +1,26 @@
-package model;
+package br.edu.ifpi.poo.entities;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class User {
+public class Client {
+    final private String cpf;
     private String name;
-    private final String cpf;
     private Date birthDate;
     private Address address;
 
-    public User(String name, String cpf, Date birthDate, Address address) {
-        this.name = name;
+    public Client(String cpf, String name, Date birthDate, Address address) {
         this.cpf = cpf;
+        this.name = name;
         this.birthDate = birthDate;
         this.address = address;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public String getCpf() {
         return cpf;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public Date getBirthDate() {
@@ -37,23 +36,13 @@ public class User {
     }
 
     public void setBirthDate(Date birthDate) {
+        if (birthDate.after(new Date())) {
+            throw new IllegalArgumentException("Data de nascimento não pode ser maior que a data atual");
+        }
         this.birthDate = birthDate;
     }
-
+    
     public void setAddress(Address address) {
         this.address = address;
     }
-
-    @Override
-    public String toString() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        String formattedBirthDate = dateFormat.format(birthDate);
-
-        return String.format("""
-                Nome: %s
-                CPF: %s
-                Data de nascimento: %s
-                """, name, cpf, formattedBirthDate);
-    }
-
 }
