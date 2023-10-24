@@ -17,12 +17,6 @@ public class Address {
 
     @Override
     public String toString() {
-        return """
-                Rua: %s
-                Número: %s
-                Bairro: %s
-                Cidade: %s
-                Estado: %s
-                """.formatted(street, number, neighborhood, city, state);
+        return "%s, %s, %s, %s - %s".formatted(street, number, neighborhood, city, state);
     }
 }
