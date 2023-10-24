@@ -45,4 +45,14 @@ public class Client {
     public void setAddress(Address address) {
         this.address = address;
     }
+
+    @Override
+    public String toString() {
+        return """
+                CPF: %s
+                Nome: %s
+                Data de Nascimento: %s
+                Endereço: %s
+                """.formatted(cpf, name, birthDate, address);
+    }
 }
