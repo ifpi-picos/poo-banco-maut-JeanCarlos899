@@ -14,4 +14,15 @@ public class Address {
         this.city = city;
         this.state = state;
     }
+
+    @Override
+    public String toString() {
+        return """
+                Rua: %s
+                Número: %s
+                Bairro: %s
+                Cidade: %s
+                Estado: %s
+                """.formatted(street, number, neighborhood, city, state);
+    }
 }
