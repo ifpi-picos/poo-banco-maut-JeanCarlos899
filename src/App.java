@@ -61,6 +61,7 @@ public class App {
           System.out.println("[1] Conta corrente");
           System.out.println("[2] Conta poupança");
           System.out.println("[3] sair");
+          System.out.println("============================================");
 
           int accountType = scanner.nextInt();
           scanner.nextLine();
@@ -116,9 +117,12 @@ public class App {
               System.out.println("Digite o número da agência: ");
               agency = scanner.nextLine();
 
+              System.out.println("============================================");
               System.out.println("Notificações por e-mail ou SMS? ");
               System.out.println("[1] E-mail");
               System.out.println("[2] SMS");
+              System.out.println("============================================");
+              
               notificationType = scanner.nextInt();
 
               notifications = getNotifications(notificationType);
