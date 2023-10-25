@@ -64,13 +64,4 @@ public abstract class Account {
 
         return accountNumber;
     }
-    
-    @Override
-    public String toString() {
-        return """
-                Agência = %s
-                Número  = %s
-                Usuário = %s
-                Saldo   = %s""".formatted(agency, accountNumber, client.getName(), balance);
-    }
 }
