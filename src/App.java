@@ -14,6 +14,25 @@ import br.edu.ifpi.poo.notifications.Notifications;
 import br.edu.ifpi.poo.notifications.NotificationsEmail;
 import br.edu.ifpi.poo.notifications.NotificationsSms;
 
+// Algumas informações importantes antes de começar:
+// * O acesso a conta é feito através do número da conta, que é
+//   gerado automaticamente;
+// * O número da conta é gerado automaticamente, e é composto por 4
+//   dígitos;
+// * O número da agência é informado pelo usuário;
+// * O saldo inicial é 0;
+// * O cheque especial funciona da seguinte maneira:
+//   - O valor do cheque especial é 0 por padrão;
+//   - O valor do cheque especial apesar de ser um valor positivo, é
+//     considerado uma dívida;
+//   - O valor do cheque especial é usado para cobrir saques e
+//     transferências, caso o saldo seja insuficiente;
+//   - Ao fazer um depósito, o valor do cheque especial é usado para
+//     reduzir a dívida, caso haja;
+// * Algumas implementações no App como a parte de edição dos dados não
+//   foram inseridas pois não agregam no aprendizado.
+
+
 public class App {
   private static List<Account> accounts = new ArrayList<>();
   private static List<Client> clients = new ArrayList<>();
@@ -21,17 +40,10 @@ public class App {
   public static void main(String[] args) {
 
     Scanner scanner = new Scanner(System.in);
-
     Account currentAccount = null;
 
-    accounts.add(new CurrentAccount("123",
-        new Client("123", "João", new Date(), new Address("Rua 1", "123", "Bairro 1", "Teresina", "PI")),
-        new NotificationsEmail()));
-
-    accounts.add(new CurrentAccount("456", new Client("456", "Maria", new Date(),
-        new Address("Rua 2", "456", "Bairro 2", "Teresina", "PI")), new NotificationsSms()));
-
     while (true) {
+      clearScreen();
       System.out.println("==========Bem-vindo ao Banco Maut!==========");
       System.out.println("[1] Criar conta");
       System.out.println("[2] Acessar conta");
@@ -42,6 +54,13 @@ public class App {
 
       switch (input) {
         case 1:
+          Notifications notifications = null;
+          Client client = null;
+          String agency;
+          String cpf;
+          int notificationType;
+
+          clearScreen();
           System.out.println("=================Criar conta================");
           System.out.println("[1] Conta corrente");
           System.out.println("[2] Conta poupança");
@@ -50,36 +69,10 @@ public class App {
           int accountType = scanner.nextInt();
           scanner.nextLine();
 
-          Notifications notifications = null;
-          Client client = null;
           switch (accountType) {
             case 1:
+              clearScreen();
               System.out.println("============Criar conta corrente============");
-              System.out.println("Digite o seu CPF: ");
-              String cpf = scanner.nextLine();
-
-              client = findClientByCpf(clients, cpf);
-
-              if (client == null) {
-                client = createClient(scanner, cpf);
-                clients.add(client);
-              }
-
-              System.out.println("Digite o número da agência: ");
-              String agency = scanner.nextLine();
-
-              System.out.println("Notificações por e-mail ou SMS? ");
-              System.out.println("[1] E-mail");
-              System.out.println("[2] SMS");
-              int notificationType = scanner.nextInt();
-
-              notifications = getNotifications(notificationType);
-
-              Account newCurrentAccount = new CurrentAccount(agency, client, notifications);
-              accounts.add(newCurrentAccount);
-              break;
-            case 2:
-              System.out.println("============Criar conta poupança============");
               System.out.println("Digite o seu CPF: ");
               cpf = scanner.nextLine();
 
@@ -89,6 +82,40 @@ public class App {
                 client = createClient(scanner, cpf);
                 clients.add(client);
               }
+
+              System.out.println("============Informações da conta============");
+
+              System.out.println("Digite o número da agência: ");
+              agency = scanner.nextLine();
+
+              System.out.println("Notificações por e-mail ou SMS? ");
+              System.out.println("[1] E-mail");
+              System.out.println("[2] SMS");
+              notificationType = scanner.nextInt();
+
+              notifications = getNotifications(notificationType);
+
+              Account newCurrentAccount = new CurrentAccount(agency, client, notifications);
+              accounts.add(newCurrentAccount);
+
+              createdMessage(scanner, newCurrentAccount);
+              break;
+            case 2:
+              clearScreen();
+              System.out.println("============Criar conta poupança============");
+              System.out.println("Digite o seu CPF: ");
+              cpf = scanner.nextLine();
+
+              client = findClientByCpf(clients, cpf);
+
+              if (client == null) {
+                client = createClient(scanner, cpf);
+                clients.add(client);
+              } else {
+                System.out.println("Bem vindo de volta, " + client.getName() + "!");
+              }
+
+              System.out.println("============Informações da conta============");
 
               System.out.println("Digite o número da agência: ");
               agency = scanner.nextLine();
@@ -102,6 +129,8 @@ public class App {
 
               Account newSavingsAccount = new CurrentAccount(agency, client, notifications);
               accounts.add(newSavingsAccount);
+
+              createdMessage(scanner, newSavingsAccount);
               break;
 
             case 3:
@@ -115,6 +144,7 @@ public class App {
 
         case 2:
           scanner.nextLine();
+          clearScreen();
           System.out.println("=================Acessar conta==============");
           System.out.println("Digite o número da conta: ");
           String accountNumber = scanner.nextLine();
@@ -127,12 +157,113 @@ public class App {
             System.out.println("Conta não encontrada.");
           }
           break;
-        
+
         case 3:
           System.out.println("Saindo...");
           return;
       }
     }
+  }
+
+  public static void performAccountOperations(Account account, Scanner scanner) {
+    while (true) {
+      clearScreen();
+      System.out.println("===========Bem-vindo à sua conta!===========");
+      System.out.println("Saldo: R$ " + account.getBalance());
+      if (account instanceof CurrentAccount) {
+        System.out.println("Cheque especial usado: R$ " + ((CurrentAccount) account).getOverdraft());
+      }
+      System.out.println("============================================");
+      System.out.println("[1] Depositar");
+      System.out.println("[2] Sacar");
+      System.out.println("[3] Transferir");
+      System.out.println("[4] Ver extrato");
+      System.out.println("[5] ver informações da conta");
+      System.out.println("[6] Sair da conta");
+
+      int choice = scanner.nextInt();
+      scanner.nextLine();
+      double amount;
+
+      switch (choice) {
+        case 1:
+          clearScreen();
+          System.out.println("===============Depósito=====================");
+          System.out.print("Digite o valor a ser depositado: ");
+          amount = scanner.nextDouble();
+          account.deposit(amount);
+          System.out.println("Depósito de " + amount + " realizado com sucesso.");
+          break;
+
+        case 2:
+          clearScreen();
+          System.out.println("===============Saque=======================");
+          System.out.print("Digite o valor a ser sacado: ");
+          amount = scanner.nextDouble();
+          account.withdraw(amount);
+          System.out.println("Saque de " + amount + " realizado com sucesso.");
+          break;
+
+        case 3:
+          clearScreen();
+          System.out.println("===============Transferência================");
+          System.out.print("Digite o número da conta de destino: ");
+          String destAccountNumber = scanner.nextLine();
+          Account destAccount = findAccountByNumber(accounts, destAccountNumber);
+
+          if (destAccount != null) {
+            System.out.print("Digite o valor a ser transferido: ");
+            amount = scanner.nextDouble();
+            account.transfer(destAccount, amount);
+            System.out.println("Transferência de " + amount + " realizada com sucesso.");
+          } else {
+            System.out.println("Conta de destino não encontrada.");
+          }
+          break;
+
+        case 4:
+          clearScreen();
+          System.out.println("==============Extrato da conta==============");
+          if (account.getTransactions().isEmpty()) {
+            System.out.println("Não há transações.");
+          } else {
+            for (Transaction transaction : account.getTransactions()) {
+              System.out.println(transaction);
+            }
+          }
+          wait(scanner);
+          break;
+
+        case 5:
+          clearScreen();
+          System.out.println("============Informações da conta============");
+          System.out.println(account);
+          wait(scanner);
+          break;
+
+        case 6:
+          System.out.println("Saindo da conta...");
+          return;
+
+        default:
+          System.out.println("Opção inválida.");
+      }
+    }
+  }
+
+  private static void createdMessage(Scanner scanner, Account account) {
+    clearScreen();
+    System.out.println("============Informações da conta============");
+    System.out.println(account);
+    System.out.println("============================================");
+
+    wait(scanner);
+  }
+
+  private static void wait(Scanner scanner) {
+    scanner.nextLine();
+    System.out.print("Pressione qualquer tecla para continuar...");
+    scanner.nextLine();
   }
 
   private static Notifications getNotifications(int notificationType) {
@@ -184,75 +315,9 @@ public class App {
     return client;
   }
 
-  public static void performAccountOperations(Account account, Scanner scanner) {
-    while (true) {
-      System.out.println("==========Bem-vindo à sua conta!==========");
-      System.out.println("Saldo: R$ " + account.getBalance());
-      if (account instanceof CurrentAccount) {
-        System.out.println("Cheque especial usado: R$ " + ((CurrentAccount) account).getOverdraft());
-      }
-      System.out.println("============================================");
-      System.out.println("[1] Depositar");
-      System.out.println("[2] Sacar");
-      System.out.println("[3] Transferir");
-      System.out.println("[4] Ver extrato");
-      System.out.println("[5] ver informações da conta");
-      System.out.println("[6] Sair da conta");
-
-      int choice = scanner.nextInt();
-      scanner.nextLine();
-      double amount;
-
-      switch (choice) {
-        case 1:
-          System.out.print("Digite o valor a ser depositado: ");
-          amount = scanner.nextDouble();
-          account.deposit(amount);
-          System.out.println("Depósito de " + amount + " realizado com sucesso.");
-          break;
-
-        case 2:
-          System.out.print("Digite o valor a ser sacado: ");
-          amount = scanner.nextDouble();
-          account.withdraw(amount);
-          System.out.println("Saque de " + amount + " realizado com sucesso.");
-          break;
-
-        case 3:
-          System.out.print("Digite o número da conta de destino: ");
-          String destAccountNumber = scanner.nextLine();
-          Account destAccount = findAccountByNumber(accounts, destAccountNumber);
-
-          if (destAccount != null) {
-            System.out.print("Digite o valor a ser transferido: ");
-            amount = scanner.nextDouble();
-            account.transfer(destAccount, amount);
-            System.out.println("Transferência de " + amount + " realizada com sucesso.");
-          } else {
-            System.out.println("Conta de destino não encontrada.");
-          }
-          break;
-
-        case 4:
-          System.out.println("Extrato da conta:");
-          for (Transaction transaction : account.getTransactions()) {
-            System.out.println(transaction);
-          }
-          break;
-
-        case 5:
-          System.out.println("Informações da conta:");
-          System.out.println(account);
-          return;
-
-        case 6:
-          System.out.println("Saindo da conta...");
-          return;
-
-        default:
-          System.out.println("Opção inválida.");
-      }
-    }
+  public static void clearScreen() {
+    System.out.print("\033[H\033[2J");
+    System.out.flush();
   }
 
   public static Client findClientByCpf(List<Client> clients, String cpf) {
