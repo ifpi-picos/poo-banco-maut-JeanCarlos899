@@ -13,15 +13,14 @@ public class CurrentAccount extends Account {
     @Override
     public void transfer(Account destinationAccount, double value) {
         if (numberOfTransfers < 2) {
-            // transferência sem taxa
-            withdraw(value);
-            destinationAccount.deposit(value);
+            this.withdraw(value, false);
+            destinationAccount.deposit(value, false);
             numberOfTransfers++;
         } else {
             // taxa de 10% por transferência
             double transferValue = value * 1.1;
-            withdraw(transferValue);
-            destinationAccount.deposit(value);
+            this.withdraw(transferValue, false);
+            destinationAccount.deposit(value, false);
         }
         super.notifications.sendNotification("transferência", value);
 
@@ -30,7 +29,7 @@ public class CurrentAccount extends Account {
     }
 
     @Override
-    public void deposit(double value) {
+    public void deposit(double value, boolean notification) {
         if (value > 0) {
             if (overdraft > 0) {
                 // Se houver um valor positivo no cheque especial, parte do depósito é usada
@@ -50,14 +49,17 @@ public class CurrentAccount extends Account {
                 super.balance += value;
             }
         }
-        super.notifications.sendNotification("depósito", value);
+        // Evita notificação duplicada na transferência
+        if (notification) {
+            super.notifications.sendNotification("depósito", value);
+        }
 
         Transaction transaction = new Transaction("depósito", value);
         super.addTransaction(transaction);
     }
 
     @Override
-    public void withdraw(double value) {
+    public void withdraw(double value, boolean notification) {
         // verifica se o valor do saque é maior que o saldose for,
         // calcula o valor que falta para o saque zerar o saldo e
         // adiciona esse valor ao cheque especial
@@ -68,10 +70,13 @@ public class CurrentAccount extends Account {
         } else {
             // se o valor for maior que o saldo, apenas subtrai o
             // valor não é necessário utilizar o cheque especial
-            
+
             super.balance -= value;
         }
-        super.notifications.sendNotification("saque", value);
+
+        if (notification) {
+            super.notifications.sendNotification("saque", value);
+        }
 
         Transaction transaction = new Transaction("saque", value);
         super.addTransaction(transaction);

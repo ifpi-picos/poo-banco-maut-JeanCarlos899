@@ -26,9 +26,9 @@ public abstract class Account {
 
     public abstract void transfer(Account destinationAccount, double value);
 
-    public abstract void deposit(double value);
+    public abstract void deposit(double value, boolean notification);
 
-    public abstract void withdraw(double value);
+    public abstract void withdraw(double value, boolean notification);
 
     public List<Transaction> getTransactions() {
         return transactions;
@@ -38,6 +38,10 @@ public abstract class Account {
         transactions.add(transaction);
     }
     
+    public Notifications getNotifications() {
+        return notifications;
+    }
+
     public void setNotifications(Notifications notifications) {
         this.notifications = notifications;
     }

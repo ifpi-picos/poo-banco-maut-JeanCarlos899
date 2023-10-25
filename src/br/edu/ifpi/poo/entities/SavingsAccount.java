@@ -8,16 +8,20 @@ public class SavingsAccount extends Account {
     }
 
     @Override
-    public void deposit(double value) {
+    public void deposit(double value, boolean notification) {
         if (value > 0) {
             // rendimento de 10% por depósito
             double depositValue = value * 1.1;
             super.balance += depositValue;
         }
+
+        if (notification) {
+            super.notifications.sendNotification("depósito", value);
+        }
     }
 
     @Override
-    public void withdraw(double value) {
+    public void withdraw(double value, boolean notification) {
         if (value > 0 && value <= super.balance) {
             // taxa de 5% por saque
             double withdrawValue = value * 1.05;
@@ -26,6 +30,9 @@ public class SavingsAccount extends Account {
             }
             super.balance -= withdrawValue;
         }
+        if (notification) {
+            super.notifications.sendNotification("saque", value);
+        }
     }
 
     @Override
@@ -33,9 +40,11 @@ public class SavingsAccount extends Account {
         if (value > 0 && value <= super.balance) {
             // taxa de 10% por transferência
             double transferValue = value * 1.1;
-            withdraw(transferValue);
-            destinationAccount.deposit(value);
+            super.balance -= transferValue;
+            destinationAccount.deposit(value, false);
         }
+
+        super.notifications.sendNotification("transferência", value);
     }
 
     @Override
