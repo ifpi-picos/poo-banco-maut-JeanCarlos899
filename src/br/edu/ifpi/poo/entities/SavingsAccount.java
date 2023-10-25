@@ -1,8 +1,10 @@
 package br.edu.ifpi.poo.entities;
 
+import br.edu.ifpi.poo.notifications.Notifications;
+
 public class SavingsAccount extends Account {
-    public SavingsAccount(String agency) {
-        super(agency);
+    public SavingsAccount(String agency, Client client, Notifications notifications) {
+        super(agency, client, notifications);
     }
 
     @Override
@@ -32,7 +34,7 @@ public class SavingsAccount extends Account {
             destinationAccount.deposit(value);
         }
     }
-    
+
     @Override
     public String toString() {
         return """
