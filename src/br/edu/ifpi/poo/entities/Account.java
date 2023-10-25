@@ -26,9 +26,9 @@ public abstract class Account {
 
     public abstract void transfer(Account destinationAccount, double value);
 
-    public abstract void deposit(double value, boolean notification);
+    public abstract void deposit(double value, boolean notification, boolean createTransaction);
 
-    public abstract void withdraw(double value, boolean notification);
+    public abstract void withdraw(double value, boolean notification, boolean createTransaction);
 
     public List<Transaction> getTransactions() {
         return transactions;

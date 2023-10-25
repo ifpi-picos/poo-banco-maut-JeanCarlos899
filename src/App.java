@@ -206,7 +206,7 @@ public class App {
           System.out.println("===============Depósito=====================");
           System.out.print("Digite o valor a ser depositado: ");
           amount = scanner.nextDouble();
-          account.deposit(amount, true);
+          account.deposit(amount, true, true);
           System.out.println("Depósito de " + amount + " realizado com sucesso.");
           wait(scanner);
           break;
@@ -216,7 +216,7 @@ public class App {
           System.out.println("===============Saque=======================");
           System.out.print("Digite o valor a ser sacado: ");
           amount = scanner.nextDouble();
-          account.withdraw(amount, true);
+          account.withdraw(amount, true, true);
           System.out.println("Saque de " + amount + " realizado com sucesso.");
           wait(scanner);
           break;
