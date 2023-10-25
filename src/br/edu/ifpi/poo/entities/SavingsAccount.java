@@ -21,6 +21,9 @@ public class SavingsAccount extends Account {
         if (value > 0 && value <= super.balance) {
             // taxa de 5% por saque
             double withdrawValue = value * 1.05;
+            if (withdrawValue > super.balance) {
+                return;
+            }
             super.balance -= withdrawValue;
         }
     }
@@ -40,7 +43,7 @@ public class SavingsAccount extends Account {
         return """
                 Tipo: Conta Poupança
                 Agência: %s
-                Número: %s
+                Número da conta: %s
                 Saldo: %.2f
                 """.formatted(super.agency, super.accountNumber, super.balance);
     }
