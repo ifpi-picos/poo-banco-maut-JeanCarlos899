@@ -2,9 +2,9 @@ package br.edu.ifpi.poo.notifications;
 
 public class NotificationsEmail implements Notifications {
     @Override
-    public void enviaNotificacao(String tipo, double valor) {
+    public void sendNotification(String type, double value) {
         System.out.println("Enviando notificação por e-mail");
-        System.out.println("Tipo: " + tipo);
-        System.out.println("Valor: " + valor);
+        System.out.println("Tipo: " + type);
+        System.out.println("Valor: " + value);
     }
 }
