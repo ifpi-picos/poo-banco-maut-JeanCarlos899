@@ -28,7 +28,6 @@ import br.edu.ifpi.poo.notifications.NotificationsSms;
 // * Provavelmente existem diversos bugs, pois não foi feito testes suficientes;
 // * Tratativas de erros por parte do usuário não foram implementadas pois aumentariam a complexidade do código;
 
-
 public class App {
   private static List<Account> accounts = new ArrayList<>();
   private static List<Client> clients = new ArrayList<>();
@@ -39,6 +38,14 @@ public class App {
     Account currentAccount = null;
 
     while (true) {
+      // Contas para teste
+      accounts.add(new CurrentAccount("1234",
+          new Client("12345678910", "João", new Date(), new Address("Rua 1", "123", "Bairro 1", "Teresina", "PI")),
+          new NotificationsEmail()));
+      accounts.add(new CurrentAccount("1234",
+          new Client("12345678910", "João", new Date(), new Address("Rua 1", "123", "Bairro 1", "Teresina", "PI")),
+          new NotificationsEmail()));
+
       clearScreen();
       System.out.println("==========Bem-vindo ao Banco Maut!==========");
       System.out.println("[1] Criar conta");
@@ -85,9 +92,12 @@ public class App {
               System.out.println("Digite o número da agência: ");
               agency = scanner.nextLine();
 
+              System.out.println("============================================");
               System.out.println("Notificações por e-mail ou SMS? ");
               System.out.println("[1] E-mail");
               System.out.println("[2] SMS");
+              System.out.println("============================================");
+
               notificationType = scanner.nextInt();
 
               notifications = getNotifications(notificationType);
@@ -122,7 +132,7 @@ public class App {
               System.out.println("[1] E-mail");
               System.out.println("[2] SMS");
               System.out.println("============================================");
-              
+
               notificationType = scanner.nextInt();
 
               notifications = getNotifications(notificationType);
@@ -181,8 +191,10 @@ public class App {
       System.out.println("[2] Sacar");
       System.out.println("[3] Transferir");
       System.out.println("[4] Ver extrato");
-      System.out.println("[5] ver informações da conta");
-      System.out.println("[6] Sair da conta");
+      System.out.println("[5] Ver informações da conta");
+      System.out.println("[6] Ver informações do usuário");
+      System.out.println("[7] Sair da conta");
+      System.out.println("============================================");
 
       int choice = scanner.nextInt();
       scanner.nextLine();
@@ -245,6 +257,13 @@ public class App {
           break;
 
         case 6:
+          clearScreen();
+          System.out.println("============Informações do usuário===========");
+          System.out.println(account.getClient());
+          wait(scanner);
+          break;
+
+        case 7:
           System.out.println("Saindo da conta...");
           return;
 
