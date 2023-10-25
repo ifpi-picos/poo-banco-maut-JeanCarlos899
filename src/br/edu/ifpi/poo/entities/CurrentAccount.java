@@ -1,11 +1,13 @@
 package br.edu.ifpi.poo.entities;
 
+import br.edu.ifpi.poo.notifications.Notifications;
+
 public class CurrentAccount extends Account {
     private double overdraft;
     private int numberOfTransfers = 0;
 
-    public CurrentAccount(String agency) {
-        super(agency);
+    public CurrentAccount(String agency, Client client, Notifications notifications) {
+        super(agency, client, notifications);
     }
 
     @Override
@@ -21,45 +23,58 @@ public class CurrentAccount extends Account {
             withdraw(transferValue);
             destinationAccount.deposit(value);
         }
+        super.notifications.sendNotification("transferência", value);
+
+        Transaction transaction = new Transaction("transferência", value);
+        super.addTransaction(transaction);
     }
 
     @Override
     public void deposit(double value) {
         if (value > 0) {
-            if (overdraft < 0 && (value + overdraft) < 0) {
-                // se o cheque especial estiver negativo e o valor do depósito
-                // for menor que o cheque especial, apenas adiciona o valor
-                // ao cheque especial
-                overdraft += value;
-            } else if (overdraft < 0 && (value + overdraft) > 0) {
-                // se o cheque especial estiver negativo e o valor do depósito
-                // for maior que o cheque especial, adiciona o valor que falta
-                // para zerar o cheque especial e adiciona o restante ao saldo
-                double difference = overdraft + value;
-                overdraft = 0;
-                super.balance += difference;
+            if (overdraft > 0) {
+                // Se houver um valor positivo no cheque especial, parte do depósito é usada
+                // para reduzir a dívida no cheque especial, e o restante é adicionado ao saldo
+                if (value >= overdraft) {
+                    // O depósito cobre totalmente o cheque especial
+                    value -= overdraft;
+                    overdraft = 0;
+                    super.balance += value;
+                } else {
+                    // O depósito cobre parcialmente o cheque especial
+                    overdraft -= value;
+                }
             } else {
-                // se o cheque especial estiver zerado ou positivo, apenas
-                // adiciona o valor ao saldo
+                // Se o cheque especial estiver zerado ou negativo, todo o valor do depósito
+                // é adicionado ao saldo
                 super.balance += value;
             }
         }
+        super.notifications.sendNotification("depósito", value);
+
+        Transaction transaction = new Transaction("depósito", value);
+        super.addTransaction(transaction);
     }
 
     @Override
     public void withdraw(double value) {
-        // verifica se o valor do saque é maior que o saldo
-        // se for, calcula o valor que falta para o saque
-        // zerar o saldo e adiciona esse valor ao cheque especial
+        // verifica se o valor do saque é maior que o saldose for,
+        // calcula o valor que falta para o saque zerar o saldo e
+        // adiciona esse valor ao cheque especial
         if (super.balance < value) {
             double difference = super.balance - value;
             super.balance = 0;
             overdraft -= difference;
         } else {
-            // se o valor for maior que o saldo, apenas subtrai o valor
-            // não é necessário utilizar o cheque especial
+            // se o valor for maior que o saldo, apenas subtrai o
+            // valor não é necessário utilizar o cheque especial
+            
             super.balance -= value;
         }
+        super.notifications.sendNotification("saque", value);
+
+        Transaction transaction = new Transaction("saque", value);
+        super.addTransaction(transaction);
     }
 
     public double getOverdraft() {
@@ -73,7 +88,7 @@ public class CurrentAccount extends Account {
                 Agência: %s
                 Número da conta: %s
                 Saldo: %.2f
-                Cheque especial: %.2f
+                Cheque especial usado: %.2f
                 """.formatted(super.agency, super.accountNumber, super.balance, overdraft);
     }
 }
