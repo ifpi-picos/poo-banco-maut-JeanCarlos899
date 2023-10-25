@@ -14,13 +14,13 @@ public class CurrentAccount extends Account {
     public void transfer(Account destinationAccount, double value) {
         if (numberOfTransfers < 2) {
             this.withdraw(value, false, false);
-            destinationAccount.deposit(value, false, false);
+            destinationAccount.deposit(value, false, true);
             numberOfTransfers++;
         } else {
             // taxa de 10% por transferência
             double transferValue = value * 1.1;
             this.withdraw(transferValue, false, false);
-            destinationAccount.deposit(value, false, false);
+            destinationAccount.deposit(value, false, true);
         }
         super.notifications.sendNotification("transferência", value);
 
