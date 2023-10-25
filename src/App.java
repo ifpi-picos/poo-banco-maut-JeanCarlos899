@@ -15,22 +15,18 @@ import br.edu.ifpi.poo.notifications.NotificationsEmail;
 import br.edu.ifpi.poo.notifications.NotificationsSms;
 
 // Algumas informações importantes antes de começar:
-// * O acesso a conta é feito através do número da conta, que é
-//   gerado automaticamente;
-// * O número da conta é gerado automaticamente, e é composto por 4
-//   dígitos;
+// * O acesso a conta é feito através do número da conta, que é gerado automaticamente;
+// * O número da conta é gerado automaticamente, e é composto por 4 dígitos;
 // * O número da agência é informado pelo usuário;
 // * O saldo inicial é 0;
 // * O cheque especial funciona da seguinte maneira:
 //   - O valor do cheque especial é 0 por padrão;
-//   - O valor do cheque especial apesar de ser um valor positivo, é
-//     considerado uma dívida;
-//   - O valor do cheque especial é usado para cobrir saques e
-//     transferências, caso o saldo seja insuficiente;
-//   - Ao fazer um depósito, o valor do cheque especial é usado para
-//     reduzir a dívida, caso haja;
-// * Algumas implementações no App como a parte de edição dos dados não
-//   foram inseridas pois não agregam no aprendizado.
+//   - O valor do cheque especial apesar de ser um valor positivo, é considerado uma dívida;
+//   - O valor do cheque especial é usado para cobrir saques e transferências, caso o saldo seja insuficiente;
+//   - Ao fazer um depósito, o valor do cheque especial é usado para reduzir a dívida, caso haja.
+// * Algumas implementações no App como a parte de edição dos dados não foram inseridas pois não agregam no aprendizado;
+// * Provavelmente existem diversos bugs, pois não foi feito testes suficientes;
+// * Tratativas de erros por parte do usuário não foram implementadas pois aumentariam a complexidade do código;
 
 
 public class App {
@@ -154,7 +150,10 @@ public class App {
           if (currentAccount != null) {
             performAccountOperations(currentAccount, scanner);
           } else {
+            System.out.println("============================================");
             System.out.println("Conta não encontrada.");
+            System.out.println("============================================");
+            wait(scanner);
           }
           break;
 
