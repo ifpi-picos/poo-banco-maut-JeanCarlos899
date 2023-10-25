@@ -1,5 +1,6 @@
 package br.edu.ifpi.poo.entities;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Client {
@@ -41,18 +42,20 @@ public class Client {
         }
         this.birthDate = birthDate;
     }
-    
+
     public void setAddress(Address address) {
         this.address = address;
     }
 
     @Override
     public String toString() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
         return """
                 CPF: %s
                 Nome: %s
                 Data de Nascimento: %s
                 Endereço: %s
-                """.formatted(cpf, name, birthDate, address);
+                """.formatted(cpf, name, dateFormat.format(birthDate), address);
     }
 }
