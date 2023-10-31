@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
-
 import br.edu.ifpi.poo.entities.Account;
 import br.edu.ifpi.poo.entities.Address;
 import br.edu.ifpi.poo.entities.Client;
@@ -20,13 +19,16 @@ import br.edu.ifpi.poo.notifications.NotificationsSms;
 // * O número da agência é informado pelo usuário;
 // * O saldo inicial é 0;
 // * O cheque especial funciona da seguinte maneira:
-//   - O valor do cheque especial é 0 por padrão;
-//   - O valor do cheque especial apesar de ser um valor positivo, é considerado uma dívida;
-//   - O valor do cheque especial é usado para cobrir saques e transferências, caso o saldo seja insuficiente;
-//   - Ao fazer um depósito, o valor do cheque especial é usado para reduzir a dívida, caso haja.
-// * Algumas implementações no App como a parte de edição dos dados não foram inseridas pois não agregam no aprendizado;
+// - O valor do cheque especial é 0 por padrão;
+// - O valor do cheque especial apesar de ser um valor positivo, é considerado uma dívida;
+// - O valor do cheque especial é usado para cobrir saques e transferências, caso o saldo seja
+// insuficiente;
+// - Ao fazer um depósito, o valor do cheque especial é usado para reduzir a dívida, caso haja.
+// * Algumas implementações no App como a parte de edição dos dados não foram inseridas pois não
+// agregam no aprendizado;
 // * Provavelmente existem diversos bugs, pois não foi feito testes suficientes;
-// * Tratativas de erros por parte do usuário não foram implementadas pois aumentariam a complexidade do código;
+// * Tratativas de erros por parte do usuário não foram implementadas pois aumentariam a
+// complexidade do código;
 
 public class App {
   private static List<Account> accounts = new ArrayList<>();
@@ -37,13 +39,18 @@ public class App {
     Scanner scanner = new Scanner(System.in);
     Account currentAccount = null;
 
+    // eu criei uma conta poupança fiz um deposito de 100 e o saldo ficou só 100
+    // faltou o rendimento. Quando exibo as info da conta, exibe como se fosse uma
+    // conta corrente
     while (true) {
       // Contas para teste
       accounts.add(new CurrentAccount("1234",
-          new Client("12345678910", "João", new Date(), new Address("Rua 1", "123", "Bairro 1", "Teresina", "PI")),
+          new Client("12345678910", "João", new Date(),
+              new Address("Rua 1", "123", "Bairro 1", "Teresina", "PI")),
           new NotificationsEmail()));
       accounts.add(new CurrentAccount("1234",
-          new Client("12345678910", "João", new Date(), new Address("Rua 1", "123", "Bairro 1", "Teresina", "PI")),
+          new Client("12345678910", "João", new Date(),
+              new Address("Rua 1", "123", "Bairro 1", "Teresina", "PI")),
           new NotificationsEmail()));
 
       clearScreen();
@@ -184,7 +191,8 @@ public class App {
       System.out.println("===========Bem-vindo à sua conta!===========");
       System.out.println("Saldo: R$ " + account.getBalance());
       if (account instanceof CurrentAccount) {
-        System.out.println("Cheque especial usado: R$ " + ((CurrentAccount) account).getOverdraft());
+        System.out
+            .println("Cheque especial usado: R$ " + ((CurrentAccount) account).getOverdraft());
       }
       System.out.println("============================================");
       System.out.println("[1] Depositar");
